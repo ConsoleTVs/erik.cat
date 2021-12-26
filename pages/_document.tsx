@@ -15,7 +15,6 @@ const Document = () => {
           rel="stylesheet"
         />
         <link rel="alternate" hrefLang="en" href="https://erik.cat" />
-        <link rel="canonical" href="https://erik.cat" />
       </Head>
       <body>
         <Main />
