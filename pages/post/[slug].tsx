@@ -48,7 +48,7 @@ const Post: FC<Props> = ({ post }) => {
     <>
       <Head>
         <title>
-          {post.title} by {post.title} &mdash; erik.cat
+          {post.title} by {post.author} &mdash; erik.cat
         </title>
         <meta name="description" content={post.description} />
         <meta name="keywords" content={post.tags.join(", ")} />
