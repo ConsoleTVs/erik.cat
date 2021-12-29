@@ -5,6 +5,8 @@ import { SmallHeader } from "components/Header";
 import Head from "next/head";
 import { slug } from "lib/utils";
 import Image from "next/image";
+import dayjs from "dayjs";
+
 interface Props {
   posts: Post[];
 }
@@ -12,7 +14,18 @@ interface Props {
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
   return {
     props: {
-      posts: await getPosts(),
+      posts: await (
+        await getPosts()
+      ).sort((first, second) => {
+        const firstDate = dayjs(first.date);
+        const secondDate = dayjs(second.date);
+
+        if (firstDate.isSame(secondDate)) {
+          return 0;
+        }
+
+        return firstDate.isAfter(secondDate) ? -1 : 1;
+      }),
     },
   };
 };

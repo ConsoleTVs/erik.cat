@@ -30,11 +30,12 @@ module.exports = {
               margin: `${theme.spacing["6"]} 0`,
               marginTop: `${theme.spacing["12"]} !important`,
             },
-            pre: {
-              borderRadius: "0",
-              padding: "0",
+            h3: {
               color: colors.black,
-              background: colors.transparent,
+              fontWeight: theme.fontWeight.normal,
+              fontSize: theme.fontSize["lg"][0],
+              margin: `${theme.spacing["6"]} 0`,
+              marginTop: `${theme.spacing["12"]} !important`,
             },
           },
         },
