@@ -36,7 +36,7 @@ const CustomPre: FC = ({ children }) => {
     if (node && node.firstChild)
       hljs.highlightElement(node.firstChild as HTMLElement);
   }, []);
-  return <pre ref={onCreate}>{children}</pre>;
+  return <pre className="not-prose" ref={onCreate}>{children}</pre>;
 };
 
 const components = {
