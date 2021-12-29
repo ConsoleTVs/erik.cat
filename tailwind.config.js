@@ -37,6 +37,12 @@ module.exports = {
               margin: `${theme.spacing["6"]} 0`,
               marginTop: `${theme.spacing["12"]} !important`,
             },
+            pre: {
+              borderRadius: "0",
+              padding: "0",
+              color: colors.black,
+              background: colors.transparent,
+            },
           },
         },
       },
