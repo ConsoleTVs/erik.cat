@@ -1,34 +1,32 @@
-import type { Post } from "contracts";
-import type { NextPage, GetStaticProps } from "next";
-import { getPosts } from "lib/posts";
-import { SmallHeader } from "components/Header";
-import Head from "next/head";
-import { slug } from "lib/utils";
-import Image from "next/image";
-import dayjs from "dayjs";
+import type { Post } from 'contracts'
+import type { NextPage, GetStaticProps } from 'next'
+import { getPosts } from 'lib/posts'
+import { SmallHeader } from 'components/Header'
+import Head from 'next/head'
+import { slug } from 'lib/utils'
+import Image from 'next/image'
+import dayjs from 'dayjs'
 
 interface Props {
-  posts: Post[];
+  posts: Post[]
 }
 
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
   return {
     props: {
-      posts: await (
-        await getPosts()
-      ).sort((first, second) => {
-        const firstDate = dayjs(first.date);
-        const secondDate = dayjs(second.date);
+      posts: (await getPosts()).sort((first, second) => {
+        const firstDate = dayjs(first.date)
+        const secondDate = dayjs(second.date)
 
         if (firstDate.isSame(secondDate)) {
-          return 0;
+          return 0
         }
 
-        return firstDate.isAfter(secondDate) ? -1 : 1;
+        return firstDate.isAfter(secondDate) ? -1 : 1
       }),
     },
-  };
-};
+  }
+}
 
 const Home: NextPage<Props> = ({ posts }) => {
   return (
@@ -60,7 +58,7 @@ const Home: NextPage<Props> = ({ posts }) => {
         ))}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

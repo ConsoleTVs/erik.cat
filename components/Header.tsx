@@ -1,29 +1,20 @@
-import { FC, useMemo } from "react";
-import dayjs from "dayjs";
-import { Post } from "contracts";
-import Link from "next/link";
-import { slug } from "lib/utils";
+import { FC, useMemo } from 'react'
+import dayjs from 'dayjs'
+import { Post } from 'contracts'
+import Link from 'next/link'
+import { slug } from 'lib/utils'
 
 interface Props {
-  post: Post;
+  post: Post
 }
 
 const Header: FC<Props> = ({ post }) => {
-  const formattedDate = useMemo(
-    () => dayjs(post.date).format("MMM D, YYYY"),
-    [post.date]
-  );
-
-  const dateTimeDate = useMemo(
-    () => dayjs(post.date).format("YYYY-MM-DD"),
-    [post.date]
-  );
+  const formattedDate = useMemo(() => dayjs(post.date).format('MMM D, YYYY'), [post.date])
+  const dateTimeDate = useMemo(() => dayjs(post.date).format('YYYY-MM-DD'), [post.date])
 
   return (
     <header className="flex flex-col my-12 space-y-6 text-center not-prose">
-      <h1 className="text-4xl italic leading-relaxed tracking-wide font-serif2">
-        {post.title}
-      </h1>
+      <h1 className="text-4xl italic leading-relaxed tracking-wide font-serif2">{post.title}</h1>
       <div className="text-xs">
         <time dateTime={dateTimeDate}>{formattedDate}</time>
         &nbsp; &mdash; &nbsp; {post.author}
@@ -37,19 +28,13 @@ const Header: FC<Props> = ({ post }) => {
         ))}
       </div>
     </header>
-  );
-};
+  )
+}
 
 export const SmallHeader: FC<Props> = ({ post }) => {
-  const formattedDate = useMemo(
-    () => dayjs(post.date).format("MMM D, YYYY"),
-    [post.date]
-  );
+  const formattedDate = useMemo(() => dayjs(post.date).format('MMM D, YYYY'), [post.date])
 
-  const dateTimeDate = useMemo(
-    () => dayjs(post.date).format("YYYY-MM-DD"),
-    [post.date]
-  );
+  const dateTimeDate = useMemo(() => dayjs(post.date).format('YYYY-MM-DD'), [post.date])
 
   return (
     <header className="flex flex-col space-y-3 text-center not-prose">
@@ -73,7 +58,7 @@ export const SmallHeader: FC<Props> = ({ post }) => {
         ))}
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
