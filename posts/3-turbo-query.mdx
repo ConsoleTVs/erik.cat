@@ -219,9 +219,9 @@ You can invalidate or forget certain cache items by key using the `forget` funct
 
 ```js
 // Forget a single key.
-forget('/user')
+instance.forget('/user')
 // Forget multiple keys.
-forget(['/user', '/posts'])
+instance.forget(['/user', '/posts'])
 ```
 
 # Inspect current cached keys.
