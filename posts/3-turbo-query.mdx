@@ -17,6 +17,8 @@ manage this data by using an internal cache. It is very similar to how vercel's 
 work. Turbo Query is also build to support arbitrary cache and event system,
 making it possible to create your own implementations.
 
+Checkout the [Github repository](https://github.com/StudioLambda/TurboQuery) to learn more about the project.
+
 # Installation
 
 To install Turbo Query just install the `turbo-query` NPM package:
@@ -151,6 +153,7 @@ acual data.
 ```js
 // Using the URL as cache key.
 const result = await instance.query('/posts')
+
 // Custom cache key and fetcher for this query.
 const result2 = await instance.query('my-posts', {
   fetcher: () => fetch('/posts').then((r) => r.json()),
@@ -220,6 +223,7 @@ You can invalidate or forget certain cache items by key using the `forget` funct
 ```js
 // Forget a single key.
 instance.forget('/user')
+
 // Forget multiple keys.
 instance.forget(['/user', '/posts'])
 ```
