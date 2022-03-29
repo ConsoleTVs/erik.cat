@@ -38,10 +38,20 @@ on its constructor, allowing to tune and setup the internal configuration, cache
 import { createTurboQuery } from 'turbo-query'
 
 // Create the configuration object.
-const options = {}
+const options = {
+  // Example isomorphic fetcher, requires node 17.5+.
+  async fetcher(key, { signal }) {
+    const response = await fetch(key, { signal })
+    if (!response.ok) throw new Error('Not a 4XX response')
+    return await response.json()
+  },
+}
 
 // Create the Turbo Query instsance.
 const instance = createTurboQuery(options)
+
+// Start querying!
+const result = await instance.query('/posts')
 ```
 
 # Configuration Options

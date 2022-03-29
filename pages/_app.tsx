@@ -5,7 +5,7 @@ import Link from 'next/link'
 const prosePre =
   'prose-pre:!border-0 prose-pre:!rounded-none prose-pre:!p-0 prose-code:!p-0 prose-pre:!text-black prose-pre:!bg-transparent'
 const proseHeadings =
-  'prose-headings:!text-black prose-headings:!font-bold prose-headings:!mt-12 prose-headings:!mb-4'
+  'prose-headings:!text-left prose-headings:!text-black prose-headings:!font-bold prose-headings:!mt-12 prose-headings:!mb-4'
 const proseH1 =
   "prose-h1:!text-2xl md:prose-h1:!text-3xl prose-h1:before:content-['#'] prose-h1:before:pr-2 prose-h1:before:text-slate-200"
 const proseH2 = 'prose-h2:!text-xl md:prose-h2:!text-2xl'
