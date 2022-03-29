@@ -30,12 +30,15 @@ const Home: NextPage<Props> = ({ posts }) => {
   })
   const [searchInput, setSearchInput] = useState<HTMLInputElement>()
   const [results, setResults] = useState<Post[]>([])
-  const filteredPosts = useMemo(() => (search === '' ? posts : results), [search, results])
+  const filteredPosts = useMemo(() => (search === '' ? posts : results), [search, posts, results])
 
-  const handleSearch = useCallback(function (event: ChangeEvent<HTMLInputElement>) {
-    setSearch(event.currentTarget.value)
-    setResults(fuse.search(event.currentTarget.value).map((item) => item.item))
-  }, [])
+  const handleSearch = useCallback(
+    function (event: ChangeEvent<HTMLInputElement>) {
+      setSearch(event.currentTarget.value)
+      setResults(fuse.search(event.currentTarget.value).map((item) => item.item))
+    },
+    [fuse]
+  )
 
   useEffect(
     function () {
@@ -94,7 +97,7 @@ const Home: NextPage<Props> = ({ posts }) => {
             </a>
             <div className="text-slate-600">&bull;</div>
             <a
-              href="mailto:%73o&#99;@erik.%63a&#116;"
+              href="mailto:soc@erik.cat"
               className="duration-300 text-slate-500 hover:text-black transition-color decoration-2 underline-offset-2 decoration-transparent hover:decoration-slate-300">
               Email
             </a>
