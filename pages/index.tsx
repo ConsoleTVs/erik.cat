@@ -97,7 +97,7 @@ const Home: NextPage<Props> = ({ posts }) => {
             </a>
             <div className="text-slate-600">&bull;</div>
             <a
-              href="mailto:soc@erik.cat"
+              href="mailto:%73o&#99;@erik.%63a&#116;"
               className="duration-300 text-slate-500 hover:text-black transition-color decoration-2 underline-offset-2 decoration-transparent hover:decoration-slate-300">
               Email
             </a>
