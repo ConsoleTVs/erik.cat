@@ -171,9 +171,9 @@ const App = () => {
   const configuration = {}
 
   return (
-    <TurboContext value={configuration}>
+    <TurboContext.Provider value={configuration}>
       <MyApp />
-    </TurboContext>
+    </TurboContext.Provider>
   )
 }
 ```
