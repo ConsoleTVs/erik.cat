@@ -120,7 +120,7 @@ const Home: NextPage<Props> = ({ posts }) => {
               search === '' ? 'opacity-0' : 'opacity-100'
             }`}>
             {' '}
-            with "{search}"
+            with &quot;{search}&quot;
           </span>
         </div>
       </div>
