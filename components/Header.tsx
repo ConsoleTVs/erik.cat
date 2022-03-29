@@ -14,12 +14,12 @@ const Header: FC<Props> = ({ post }) => {
 
   return (
     <header className="flex flex-col my-12 space-y-6 text-center not-prose">
-      <h1 className="text-4xl italic leading-relaxed tracking-wide font-serif2">{post.title}</h1>
+      <h1 className="font-serif text-3xl font-bold !leading-relaxed md:text-4xl">{post.title}</h1>
       <div className="text-xs">
         <time dateTime={dateTimeDate}>{formattedDate}</time>
         &nbsp; &mdash; &nbsp; {post.author}
       </div>
-      <div className="flex items-center justify-center text-xs text-gray-500">
+      <div className="flex items-center justify-center text-xs text-slate-500">
         {post.tags.map((tag, i) => (
           <div key={i}>
             {tag}
@@ -33,23 +33,20 @@ const Header: FC<Props> = ({ post }) => {
 
 export const SmallHeader: FC<Props> = ({ post }) => {
   const formattedDate = useMemo(() => dayjs(post.date).format('MMM D, YYYY'), [post.date])
-
   const dateTimeDate = useMemo(() => dayjs(post.date).format('YYYY-MM-DD'), [post.date])
 
   return (
-    <header className="flex flex-col space-y-3 text-center not-prose">
-      <Link href={`/post/${slug(post)}`}>
+    <header className="flex flex-col space-y-3 not-prose">
+      <Link href={`/post/${slug(post.title)}`}>
         <a>
-          <h1 className="text-2xl italic leading-relaxed tracking-wide font-serif2">
-            {post.title}
-          </h1>
+          <h1 className="font-serif text-2xl font-bold !leading-relaxed">{post.title}</h1>
         </a>
       </Link>
       <div className="text-xs">
         <time dateTime={dateTimeDate}>{formattedDate}</time>
         &nbsp; &mdash; &nbsp; {post.author}
       </div>
-      <div className="flex items-center justify-center text-xs text-gray-500">
+      <div className="flex items-center text-xs text-slate-500">
         {post.tags.map((tag, i) => (
           <div key={i}>
             {tag}

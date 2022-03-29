@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.0",
+    "fuse.js": "^6.5.3",
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.5.0",
     "markdown-to-txt": "^2.0.0",

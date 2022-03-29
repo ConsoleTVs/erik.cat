@@ -1,4 +1,4 @@
-import { FC, DetailedHTMLProps, HTMLAttributes, useCallback } from 'react'
+import { FC, DetailedHTMLProps, HTMLAttributes, useCallback, useMemo } from 'react'
 import type { Post } from 'contracts'
 import { getPosts } from 'lib/posts'
 import { slug } from 'lib/utils'
@@ -8,6 +8,7 @@ import { MDXRemote } from 'next-mdx-remote'
 import Head from 'next/head'
 import hljs from 'highlight.js/lib/common'
 import 'highlight.js/styles/xcode.css'
+import Link from 'next/link'
 
 interface Props {
   post: Post
@@ -17,14 +18,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getPosts()
   return {
     paths: posts.map((post) => ({
-      params: { slug: slug(post) },
+      params: { slug: slug(post.title) },
     })),
     fallback: false,
   }
 }
 
 export const getStaticProps: GetStaticProps<Props> = async (context) => {
-  const post = (await getPosts()).find((post) => slug(post) === context.params?.slug)
+  const post = (await getPosts()).find((post) => slug(post.title) === context.params?.slug)
 
   return post === undefined ? { notFound: true } : { props: { post } }
 }
@@ -43,8 +44,27 @@ const CustomPre = ({
   )
 }
 
+const CustomH1 = ({
+  children,
+  ...props
+}: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => {
+  const id = useMemo(() => (typeof children === 'string' ? slug(children) : undefined), [children])
+  return (
+    <div className="flex no-prose">
+      <Link href={`#${id}`}>
+        <a className="no-underline">
+          <h1 id={id} className="" {...props}>
+            {children}
+          </h1>
+        </a>
+      </Link>
+    </div>
+  )
+}
+
 const components = {
   pre: CustomPre,
+  h1: CustomH1,
 }
 
 const Post: FC<Props> = ({ post }) => {

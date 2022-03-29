@@ -1,7 +1,8 @@
 import type { Post } from 'contracts'
+import dayjs from 'dayjs'
 
-export const slug = (post: Post): string => {
-  return post.title
+export function slug(value: string): string {
+  return value
     .toString()
     .trim()
     .toLowerCase()
@@ -10,4 +11,15 @@ export const slug = (post: Post): string => {
     .replace(/\-\-+/g, '-')
     .replace(/^-+/, '')
     .replace(/-+$/, '')
+}
+
+export function orderPostsByDate(first: Post, second: Post) {
+  const firstDate = dayjs(first.date)
+  const secondDate = dayjs(second.date)
+
+  if (firstDate.isSame(secondDate)) {
+    return 0
+  }
+
+  return firstDate.isAfter(secondDate) ? -1 : 1
 }
