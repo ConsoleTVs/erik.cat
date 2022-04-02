@@ -144,6 +144,20 @@ There's no need to supply the key in any of those functions as they are already 
   abort()
   ```
 
+- `isRefetching`: An `Accessor<boolean>` that allows you to know if there's a refetching in the background.
+
+  ```jsx
+  // This is a reactive value
+  isRefetching() // true / false
+
+  // In render functions...
+  return (
+    <Show when={isRefetching()}>
+      <div>Refetching...</div>
+    </Show>
+  )
+  ```
+
 # Configuration
 
 Turbo Resources accept two additional configuration paramenters on the
@@ -151,6 +165,9 @@ Turbo Resources accept two additional configuration paramenters on the
 
 - `turbo`: In order to use Turbo Resources, those will need to know what [Turbo Query](https://github.com/StudioLambda/TurboQuery) instance to use. You can provide the instance to use by setting it in this property. If this is null, it will use the default Turbo Query instance exported by `turbo-query`.
 - `transition`: A boolean indicating if it should use `startTransition` or transition function to use to transition the data.
+- `refetchOnFocus`: A boolean indicating if it should refetch the key when the window focus changes.
+- `refetchOnConnect`: A boolean indicating if it should refetch the key when the window network connect event.
+- `focusInterval`: An number indicating the number of ms to throttle the on focus refetching. This prevents multiple fetching in a given time span by just ignoring it.
 
 The configuration values preference list is as follows:
 
