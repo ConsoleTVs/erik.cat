@@ -250,12 +250,21 @@ const resolverKeys = instance.keys('resolvers')
 const itemKeys = instance.keys('items')
 ```
 
+# Check expiration date for items
+
+You can check the expiration date for the given keys by using the `expiration` function.
+The return value is undefined if that key is not in the items cache, otherwise, a [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) object is returned.
+
+```js
+const expirationDate = expiration('/user')
+```
+
 # Global Instance
 
 Turbo Query provides a global instance created already, allowing you quick access to all the methods of an instance with a single import.
 
 ```js
-import { query, subscribe, mutate, configure, abort, forget, keys } from 'turbo-query'
+import { query, subscribe, mutate, configure, abort, forget, keys, expiration } from 'turbo-query'
 ```
 
 This is actually suprisingly usefull and still allows you to customize the instance in some initialization function by using the `configure` function.
