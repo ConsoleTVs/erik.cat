@@ -48,36 +48,41 @@ to the fetcher to determine what to fetch. It's also possible to detmine a
 specific fetching function in the options.
 
 ```jsx
-import { createTurboResource } from 'turbo-solid'
+import { createTurboResource, TurboContext } from 'turbo-solid'
 
 // Example post component.
 const Post = (props) => {
   const [post] = createTurboResource(
     // A function that returns the key. Automatically re-fetches if it changes.
     () => `https://jsonplaceholder.typicode.com/posts/${props.id}`,
-    // Turbo Query configuration: https://github.com/StudioLambda/TurboQuery + a few extra
+    // Overwrite some configuration if needed.
     {}
   )
 
   return (
     <Show when={post()}>
-      {(post) => (
-        <div>
-          <h1>{post.title}</h1>
-          <p>{post.body}</p>
-        </div>
-      )}
+      <div>
+        <h1>{post().title}</h1>
+        <p>{post().body}</p>
+      </div>
     </Show>
   )
 }
 
 // Example usage
 const App = () => {
+  const configuration = {
+    // Turbo Query configuration: https://github.com/StudioLambda/TurboQuery
+    // + a few extra configuration items described in this page.
+  }
+
   return (
     <div>
-      <Suspense fallback={<div>Loading post...</div>}>
-        <Post id={1} />
-      </Suspense>
+      <TurboContext.Provide value={configuration}>
+        <Suspense fallback={<div>Loading post...</div>}>
+          <Post id={1} />
+        </Suspense>
+      </TurboContext.Provide>
     </div>
   )
 }
@@ -98,9 +103,22 @@ element is an object containing all the available functions to work and manipula
 first element.
 
 ```js
-const [posts, { mutate, refetch, unsubscribe, forget, abort }] = createTurboResource(
-  () => `https://jsonplaceholder.typicode.com/posts`
-)
+const [
+  posts,
+  {
+    mutate,
+    refetch,
+    unsubscribe,
+    abort,
+    forget,
+    expiration,
+    isRefetching,
+    lastFocus,
+    createFocusAvailable,
+    expiration,
+    createStale,
+  },
+] = createTurboResource(() => `https://jsonplaceholder.typicode.com/posts`)
 ```
 
 The actions API are described in the following list.
@@ -130,6 +148,13 @@ There's no need to supply the key in any of those functions as they are already 
   unsubscribe()
   ```
 
+- `abort`: Aborts the current resource key resolver / fetcher if that's pending.
+
+  ```js
+  // Aborts the current resource key.
+  abort()
+  ```
+
 - `forget`: Forgets the current resource key on the cache.
 
   ```js
@@ -137,11 +162,11 @@ There's no need to supply the key in any of those functions as they are already 
   forget()
   ```
 
-- `abort`: Aborts the current resource key resolver / fetcher if that's pending.
+- `expiration`: A `Function` that returns when the current key expires.
 
   ```js
-  // Aborts the current resource key.
-  abort()
+  // Get the expiration Date or undefined if no current key.
+  expiration()
   ```
 
 - `isRefetching`: An `Accessor<boolean>` that allows you to know if there's a refetching in the background.
@@ -156,6 +181,37 @@ There's no need to supply the key in any of those functions as they are already 
       <div>Refetching...</div>
     </Show>
   )
+  ```
+
+- `lastFocus`: An `Accessor<Date>` that determines the last time the page was focused after the resource was active.
+
+  ```js
+  // The last Date when the page was focused.
+  lastFocus()
+
+  <p>Last focus: {lastFocus().toString()}</p>
+  ```
+
+- `createFocusAvailable`: A `Function` to create reactive variables to watch is focus refetching is available and how many ms till it is. Return value is: `[Accessor<boolean>, Accessor<number>]`, usuualy typed as: `[isAvailable, availableIn]`. The parameter passed to the function determines the precision interval to update the reactive variables.
+
+  ```js
+  // Will update the reactive variables every 100ms.
+  const [isAvailable, availableIn] = createFocusAvailable(100)
+
+  <Show when={isAvailable()} fallback={<p>Focus available in {availableIn()}ms</p>}>
+    <p>Focus refetch available</p>
+  </Show>
+  ```
+
+- `createStale`: Very similar to the `createFocusAvailable`. It is a `Function` that creates two reactive signals `[isStale, staleIn]`, therefore returning `[Accessor<boolean>, Accessor<number>]`. Those signals determine if the key item is currently stale and if not, how many ms till it is. The function accepts a precision interval as a parameter.
+
+  ```js
+  // Will update the reactive variables every 100ms.
+  const [isStale, staleIn] = createStale(100)
+
+  <Show when={isStale()} fallback={<p>The value is now stale.</p>}>
+    <p>The item is still valid, it will be stale in {staleIn()}ms</p>
+  </Show>
   ```
 
 # Configuration
