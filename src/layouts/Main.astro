@@ -25,11 +25,19 @@ const finalDescription = description
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0a" />
+
     <meta property="og:title" content={finalTitle} />
     <meta property="og:description" content={finalDescription} />
     <meta property="og:type" content="article" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:image" content={ogUrl} />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:site" content="ErikCampobadal" />
+    <meta property="twitter:title" content={finalTitle} />
+    <meta property="twitter:description" content={finalDescription} />
+    <meta property="twitter:image" content={ogUrl} />
+
     <meta name="description" content={finalDescription} />
     <link rel="icon" href={favicon} />
     <link
