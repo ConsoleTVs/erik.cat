@@ -24,7 +24,7 @@ const { Content } = await post.render()
       class="!text-5xl sm:!text-6xl md:!text-7xl lg:!text-8xl font-serif text-center mb-12 !mt-0 !leading-tight sm:!leading-tight md:!leading-tight lg:!leading-tight">
       {post.data.title}
     </h1>
-    <div class="mb-6 text-sm text-center text-neutral-400 dark:text-neutral-600 md:text-base">
+    <div class="mb-6 text-sm text-center text-neutral-500 md:text-base">
       <span>
         Published on
         <FormattedDate date={post.data.pubDate} />
@@ -41,7 +41,7 @@ const { Content } = await post.render()
         )
       }
     </div>
-    <div class="mb-12 italic text-center text-neutral-400 dark:text-neutral-600">
+    <div class="mb-12 italic text-center text-neutral-500">
       {post.data.description}
     </div>
     <Content />
@@ -53,7 +53,7 @@ const { Content } = await post.render()
       />
       <div class="flex flex-col leading-tight">
         <span>Èrik C. Forés</span>
-        <span class="text-neutral-400 dark:text-neutral-600">
+        <span class="text-neutral-500">
           Senior Software Engineer at
           <a class="underline underline-offset-2 decoration-2" href="https://submer.com"> Submer</a>
         </span>

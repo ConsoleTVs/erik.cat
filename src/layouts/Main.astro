@@ -53,10 +53,22 @@ const finalDescription = description
     style="backface-visibility: hidden">
     <div class="flex flex-col">
       <header
-        class="container flex items-center justify-center h-32 space-x-3 print:hidden text-neutral-400 dark:text-neutral-600">
-        <a href="/" class={path === '/' ? 'text-black dark:text-white' : ''}>Home</a>
+        class="container flex items-center justify-center h-32 space-x-3 print:hidden text-neutral-500">
+        <a
+          href="/"
+          class={path === '/'
+            ? 'text-black dark:text-white underline underline-offset-8 decoration-2'
+            : ''}>
+          Home
+        </a>
         <span>&bullet;</span>
-        <a href="/blog" class={segments[1] === 'blog' ? 'text-black dark:text-white' : ''}>Blog</a>
+        <a
+          href="/blog"
+          class={segments[1] === 'blog'
+            ? 'text-black dark:text-white underline underline-offset-8 decoration-2'
+            : ''}>
+          Blog
+        </a>
         <span>&bullet;</span>
         <a href="https://github.com/ConsoleTVs">Github</a>
         <span>&bullet;</span>

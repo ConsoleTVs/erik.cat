@@ -15,7 +15,7 @@ const posts = (await getCollection('blog')).sort(
     class="mb-12 font-serif text-5xl font-extrabold leading-tight text-center text-black lg:leading-tight sm:leading-tight md:leading-tight sm:text-6xl md:text-7xl lg:text-8xl dark:text-white">
     <span>A little bit of everything</span>
   </h1>
-  <div class="mb-3 italic text-neutral-400 dark:text-neutral-600">
+  <div class="mb-3 italic text-neutral-500">
     Total of {posts.length} posts, ordered by date ↓
   </div>
   <ul class="space-y-8">
@@ -24,10 +24,10 @@ const posts = (await getCollection('blog')).sort(
         <li>
           <a href={`/blog/${post.slug.replace(/^[0-9]+-/, '')}/`}>
             <h1 class="font-serif text-3xl text-black dark:text-white">{post.data.title}</h1>
-            <div class="mb-4 text-neutral-400 dark:text-neutral-600">
+            <div class="mb-4 text-neutral-500">
               Published on <FormattedDate date={post.data.pubDate} />
             </div>
-            <div class="italic text-neutral-400 dark:text-neutral-600">{post.data.description}</div>
+            <div class="italic text-neutral-500">{post.data.description}</div>
           </a>
         </li>
       ))
