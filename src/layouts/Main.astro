@@ -1,13 +1,14 @@
 ---
 import Footer from '../components/Footer.astro'
 import favicon from '../assets/favicon.ico'
-import og from '../assets/og.png'
+import og from '../assets/og.png?url'
 
 interface Props {
   title?: string
   description?: string
 }
 
+const ogUrl = new URL(og, Astro.site)
 const { title, description } = Astro.props
 const path = Astro.url.pathname
 const segments = path.split('/')
@@ -28,7 +29,7 @@ const finalDescription = description
     <meta property="og:description" content={finalDescription} />
     <meta property="og:type" content="article" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:image" content={og} />
+    <meta property="og:image" content={ogUrl} />
     <meta name="description" content={finalDescription} />
     <link rel="icon" href={favicon} />
     <link
