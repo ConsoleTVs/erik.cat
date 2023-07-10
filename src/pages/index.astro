@@ -1,50 +1,108 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import Main from '../layouts/Main.astro'
+import Button from '../components/Button.astro'
+import Card from '../components/Card.astro'
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header title={SITE_TITLE} />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/pages/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<Main>
+  <h1
+    class="mb-24 font-serif text-5xl font-extrabold leading-tight text-center text-black lg:leading-tight sm:leading-tight md:leading-tight sm:text-6xl md:text-7xl lg:text-8xl dark:text-white">
+    <span>Inspiring engineers to build</span>
+    <span
+      class="font-semibold text-transparent bg-gradient-to-r from-rose-500 to-violet-500 bg-clip-text">
+      the future
+    </span>
+  </h1>
+  <div class="flex flex-col items-center justify-center max-w-sm mx-auto mb-12 space-y-6">
+    <div class="relative group">
+      <div
+        class="absolute w-24 h-24 -mt-2 -ml-2 transition-transform border-4 rounded-full border-neutral-400 dark:border-neutral-600 group-hover:scale-105">
+      </div>
+      <img
+        class="relative w-20 h-20 rounded-full"
+        src="https://avatars.githubusercontent.com/u/6124435?v=4"
+      />
+    </div>
+    <div class="text-xl text-center text-neutral-400 dark:text-neutral-600">
+      I'm <span class="underline underline-offset-4 decoration-2">Èrik</span>, a systems engineer
+      from Catalonia that builds open source software and occasionally writes about it.
+    </div>
+    <div
+      class="flex items-center justify-center space-x-2 text-sm italic text-neutral-400 dark:text-neutral-600">
+      <div>Currently working at</div>
+      <a href="https://submer.com">
+        <img
+          class="block h-4 -mt-1 grayscale invert dark:invert-0"
+          src="https://submer.com/wp-content/uploads/2020/04/submer-logo.svg"
+        />
+      </a>
+    </div>
+  </div>
+  <div class="flex items-center justify-center mb-24 space-x-6">
+    <a href="/blog">
+      <Button>Visit the blog</Button>
+    </a>
+    <a href="mailto:soc@erik.cat">
+      <Button>Contact me</Button>
+    </a>
+  </div>
+  <div class="mb-6 italic text-center text-neutral-400 dark:text-neutral-600">
+    <span>Check out some of the work that I've done in</span>
+    <span
+      class="font-semibold text-transparent bg-gradient-to-r from-rose-500 to-violet-500 bg-clip-text">
+      Open Source
+    </span>
+  </div>
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <a href="https://github.com/nuua-io/Nuua">
+      <Card>
+        <h2 class="mb-6 font-serif text-3xl">Nuua</h2>
+        <span class="text-neutral-400 dark:text-neutral-600">
+          A zero dependencies, high level strong typed, interpreted language built on the top of
+          modern C++17.
+        </span>
+      </Card>
+    </a>
+    <a href="https://github.com/ConsoleTVs/Valar">
+      <Card>
+        <h2 class="mb-6 font-serif text-3xl">Valar</h2>
+        <span class="text-neutral-400 dark:text-neutral-600">
+          A Developer Centric Async Rust Web Framework with batteries included.
+        </span>
+      </Card>
+    </a>
+    <a href="https://github.com/StudioLambda/TurboQuery">
+      <Card>
+        <h2 class="mb-6 font-serif text-3xl">Turbo Query</h2>
+        <span class="text-neutral-400 dark:text-neutral-600">
+          Lightweight, isomorphic and framework agnostic asynchronous data management for modern
+          UIs.
+        </span>
+      </Card>
+    </a>
+    <a href="https://github.com/StudioLambda/Turnstile">
+      <Card>
+        <h2 class="mb-6 font-serif text-3xl">Turnstile</h2>
+        <span class="text-neutral-400 dark:text-neutral-600">
+          A Cloudflare's Turnstile captcha adapter for Laravel.
+        </span>
+      </Card>
+    </a>
+    <a href="https://github.com/ConsoleTVs/Raygon">
+      <Card>
+        <h2 class="mb-6 font-serif text-3xl">Raygon</h2>
+        <span class="text-neutral-400 dark:text-neutral-600">
+          A very optimistic PHP web framework for enthusiasts (Abandoned, Proof of Concept)
+        </span>
+      </Card>
+    </a>
+    <a href="https://github.com/ConsoleTVs/Klib">
+      <Card>
+        <h2 class="mb-6 font-serif text-3xl">Klib</h2>
+        <span class="text-neutral-400 dark:text-neutral-600">
+          A small, well documented, simple and efficient C library used for some of my projects.
+        </span>
+      </Card>
+    </a>
+  </div>
+</Main>

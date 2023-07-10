@@ -1,54 +1,36 @@
 ---
-import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
-import { getCollection } from 'astro:content';
-import FormattedDate from '../../components/FormattedDate.astro';
+import FormattedDate from '../../components/FormattedDate.astro'
+import Main from '../../layouts/Main.astro'
+import { getCollection } from 'astro:content'
 
 const posts = (await getCollection('blog')).sort(
-	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
-);
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+)
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			ul {
-				list-style-type: none;
-				padding: unset;
-			}
-			ul li {
-				display: flex;
-			}
-			ul li :global(time) {
-				flex: 0 0 130px;
-				font-style: italic;
-				color: #595959;
-			}
-			ul li a:visited {
-				color: #8e32dc;
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<FormattedDate date={post.data.pubDate} />
-								<a href={`/blog/${post.slug}/`}>{post.data.title}</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+<Main
+  title="Blog"
+  description="A little bit of everything. A personal blog about compute science, technology and specially programming.">
+  <h1
+    class="mb-12 font-serif text-5xl font-extrabold leading-tight text-center text-black lg:leading-tight sm:leading-tight md:leading-tight sm:text-6xl md:text-7xl lg:text-8xl dark:text-white">
+    <span>A little bit of everything</span>
+  </h1>
+  <div class="mb-3 italic text-neutral-400 dark:text-neutral-600">
+    Total of {posts.length} posts, ordered by date ↓
+  </div>
+  <ul class="space-y-8">
+    {
+      posts.map((post) => (
+        <li>
+          <a href={`/blog/${post.slug.replace(/^[0-9]+-/, '')}/`}>
+            <h1 class="font-serif text-3xl text-black dark:text-white">{post.data.title}</h1>
+            <div class="mb-4 text-neutral-400 dark:text-neutral-600">
+              Published on <FormattedDate date={post.data.pubDate} />
+            </div>
+            <div class="italic text-neutral-400 dark:text-neutral-600">{post.data.description}</div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Main>

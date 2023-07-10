@@ -1,0 +1,59 @@
+---
+import Footer from '../components/Footer.astro'
+import favicon from '../assets/favicon.ico'
+
+interface Props {
+  title?: string
+  description?: string
+}
+
+const { title, description } = Astro.props
+const path = Astro.url.pathname
+const segments = path.split('/')
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0a" />
+    <link rel="icon" href={favicon} />
+    <title>
+      {title ? `${title} • Èrik C. Forés` : 'Èrik C. Forés • Software Engineer'}
+    </title>
+    <meta
+      name="description"
+      content={description
+        ? description
+        : "Inspiring engineers to build the future. I'm Èrik, a systems engineer from Catalonia that builds open source software and occasionally writes about it."}
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=gambarino@400&f[]=supreme@501,400,401,300,301,500,701,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="text-black bg-neutral-50 dark:bg-neutral-950 dark:text-white print:bg-white selection:bg-neutral-700/20 selection:dark:bg-neutral-300/20"
+    style="backface-visibility: hidden">
+    <div class="flex flex-col">
+      <header
+        class="container flex items-center justify-center h-32 space-x-3 print:hidden text-neutral-400 dark:text-neutral-600">
+        <a href="/" class={path === '/' ? 'text-black dark:text-white' : ''}>Home</a>
+        <span>&bullet;</span>
+        <a href="/blog" class={segments[1] === 'blog' ? 'text-black dark:text-white' : ''}>Blog</a>
+        <span>&bullet;</span>
+        <a href="https://github.com/ConsoleTVs">Github</a>
+        <span>&bullet;</span>
+        <a href="https://twitter.com/ErikCampobadal">Twitter</a>
+        <span>&bullet;</span>
+        <a href="https://www.linkedin.com/in/erik-c-fores/">Linkedin</a>
+      </header>
+      <main class="container flex-grow">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

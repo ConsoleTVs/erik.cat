@@ -1,21 +1,73 @@
 ---
-import { CollectionEntry, getCollection } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import { CollectionEntry, getCollection } from 'astro:content'
+import Main from '../../layouts/Main.astro'
+import FormattedDate from '../../components/FormattedDate.astro'
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.slug },
-		props: post,
-	}));
-}
-type Props = CollectionEntry<'blog'>;
+  const posts = await getCollection('blog')
 
-const post = Astro.props;
-const { Content } = await post.render();
+  return posts.map((post) => ({
+    params: { slug: post.slug.replace(/^[0-9]+-/, '') },
+    props: post,
+  }))
+}
+type Props = CollectionEntry<'blog'>
+
+const post = Astro.props
+const { Content } = await post.render()
 ---
 
-<BlogPost {...post.data}>
-	<h1>{post.data.title}</h1>
-	<Content />
-</BlogPost>
+<Main title={post.data.title} description={post.data.description}>
+  <article
+    class="prose prose-lg prose-neutral dark:prose-invert max-w-none prose-p:text-justify prose-headings:font-serif prose-headings:mt-24 prose-p:indent-6 prose-p:text-base prose-p:md:text-lg prose-p:lg:text-xl prose-p:leading-relaxed prose-h1:text-3xl prose-h1:md:text-5xl prose-h2:text-2xl prose-h2:md:text-4xl prose-h3:text-xl prose-h3:md:text-3xl prose-h4:text-lg prose-h4:md:text-2xl prose-h5:text-white prose-h5:text-base prose-h5:md:text-xl prose-h6:text-white prose-h6:text-sm prose-h6:md:text-lg prose-p:text-neutral-700 prose-p:dark:text-neutral-300">
+    <h1
+      class="!text-5xl sm:!text-6xl md:!text-7xl lg:!text-8xl font-serif text-center mb-12 !mt-0 !leading-tight sm:!leading-tight md:!leading-tight lg:!leading-tight">
+      {post.data.title}
+    </h1>
+    <div class="mb-6 text-sm text-center text-neutral-400 dark:text-neutral-600 md:text-base">
+      <span>
+        Published on
+        <FormattedDate date={post.data.pubDate} />
+      </span>
+      {
+        post.data.updatedDate && (
+          <>
+            <span class="hidden md:inline">&bullet;</span>
+            <span class="block mt-2 md:mt-0 md:inline">
+              Updated on
+              <FormattedDate date={post.data.updatedDate} />
+            </span>
+          </>
+        )
+      }
+    </div>
+    <div class="mb-12 italic text-center text-neutral-400 dark:text-neutral-600">
+      {post.data.description}
+    </div>
+    <Content />
+    <div class="flex items-center mt-12 space-x-6 not-prose">
+      <img
+        class="relative w-12 h-12 rounded-full"
+        src="https://avatars.githubusercontent.com/u/6124435?v=4"
+      />
+      <div class="flex flex-col leading-tight">
+        <span>Èrik C. Forés</span>
+        <span class="text-neutral-400 dark:text-neutral-600">
+          Senior Software Engineer at
+          <a class="underline underline-offset-2 decoration-2" href="https://submer.com"> Submer</a>
+        </span>
+      </div>
+    </div>
+  </article>
+</Main>
+
+<script>
+  const headers = document.querySelectorAll('article > :is(h1, h2, h3, h4, h5, h6)')
+
+  headers.forEach((header) => {
+    header.classList.add('scroll-mt-12')
+    header.addEventListener('click', function () {
+      window.location.hash = header.id
+    })
+  })
+</script>

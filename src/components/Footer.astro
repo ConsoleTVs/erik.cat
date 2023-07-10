@@ -1,13 +1,13 @@
----
-const today = new Date();
----
-
-<footer>
-	&copy; {today.getFullYear()} YOUR NAME HERE. All rights reserved.
+<footer
+  class="container flex flex-col my-12 space-y-2 text-sm text-center text-neutral-400 dark:text-neutral-600">
+  <span>From Catalonia with <span class="text-rose-950">♥</span></span>
+  <span>
+    Copyright &copy; <span id="today"></span> &bullet; Èrik C. Forés. All rights reserved.
+  </span>
 </footer>
-<style>
-	footer {
-		padding: 25px;
-		text-align: center;
-	}
-</style>
+
+<script>
+  const today = document.getElementById('today')!
+
+  today.innerText = new Date().getFullYear().toString()
+</script>
