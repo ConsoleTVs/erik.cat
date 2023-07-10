@@ -1,6 +1,7 @@
 ---
 import Footer from '../components/Footer.astro'
 import favicon from '../assets/favicon.ico'
+import og from '../assets/og.png'
 
 interface Props {
   title?: string
@@ -10,6 +11,10 @@ interface Props {
 const { title, description } = Astro.props
 const path = Astro.url.pathname
 const segments = path.split('/')
+const finalTitle = title ? `${title} • Èrik C. Forés` : 'Èrik C. Forés • Software Engineer'
+const finalDescription = description
+  ? description
+  : "Inspiring engineers to build the future. I'm Èrik, a systems engineer from Catalonia that builds open source software and occasionally writes about it."
 ---
 
 <!DOCTYPE html>
@@ -19,20 +24,20 @@ const segments = path.split('/')
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0a" />
+    <meta property="og:title" content={finalTitle} />
+    <meta property="og:description" content={finalDescription} />
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={og} />
+    <meta name="description" content={finalDescription} />
     <link rel="icon" href={favicon} />
-    <title>
-      {title ? `${title} • Èrik C. Forés` : 'Èrik C. Forés • Software Engineer'}
-    </title>
-    <meta
-      name="description"
-      content={description
-        ? description
-        : "Inspiring engineers to build the future. I'm Èrik, a systems engineer from Catalonia that builds open source software and occasionally writes about it."}
-    />
     <link
       href="https://api.fontshare.com/v2/css?f[]=gambarino@400&f[]=supreme@501,400,401,300,301,500,701,700&display=swap"
       rel="stylesheet"
     />
+    <title>
+      {finalTitle}
+    </title>
   </head>
   <body
     class="text-black bg-neutral-50 dark:bg-neutral-950 dark:text-white print:bg-white selection:bg-neutral-700/20 selection:dark:bg-neutral-300/20"
