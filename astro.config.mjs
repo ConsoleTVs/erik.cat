@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind'
 
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.CF_PAGES_URL ?? 'https://erik.cat',
+  site: process.env.MAIN_DOMAIN ?? process.env.CF_PAGES_URL ?? 'https://erik.cat',
   integrations: [mdx(), sitemap(), tailwind()],
   markdown: {
     shikiConfig: {
