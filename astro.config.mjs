@@ -14,7 +14,4 @@ export default defineConfig({
       theme: 'vitesse-dark',
     },
   },
-  experimental: {
-    viewTransitions: true,
-  },
 })

@@ -1,5 +1,6 @@
 ---
-import { CollectionEntry, getCollection } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
 import Main from '../../layouts/Main.astro'
 import FormattedDate from '../../components/FormattedDate.astro'
 
@@ -11,16 +12,18 @@ export async function getStaticPaths() {
     props: post,
   }))
 }
+
 type Props = CollectionEntry<'blog'>
 
 const post = Astro.props
-const { Content } = await post.render()
+const { Content, headings } = await post.render()
 ---
 
 <Main title={post.data.title} description={post.data.description}>
   <article
     class="prose prose-lg prose-neutral dark:prose-invert max-w-none prose-p:text-justify prose-headings:font-serif prose-headings:mt-24 prose-p:text-base prose-p:md:text-lg prose-p:lg:text-xl prose-p:leading-relaxed prose-h1:text-3xl prose-h1:md:text-5xl prose-h2:text-2xl prose-h2:md:text-4xl prose-h3:text-xl prose-h3:md:text-3xl prose-h4:text-lg prose-h4:md:text-2xl prose-h5:text-white prose-h5:text-base prose-h5:md:text-xl prose-h6:text-white prose-h6:text-sm prose-h6:md:text-lg prose-p:text-neutral-700 prose-p:dark:text-neutral-300">
     <h1
+      id="title"
       class="!text-5xl sm:!text-6xl md:!text-7xl lg:!text-8xl font-serif text-center mb-12 !mt-0 !leading-tight sm:!leading-tight md:!leading-tight lg:!leading-tight">
       {post.data.title}
     </h1>
@@ -43,6 +46,18 @@ const { Content } = await post.render()
     </div>
     <div class="mb-12 italic text-center text-neutral-500">
       {post.data.description}
+    </div>
+    {headings.length > 0 && <h1 id="toc">Table of contents</h1>}
+    <div class="not-prose">
+      {
+        headings.map((heading) => (
+          <span class="block" style={{ marginLeft: `${(heading.depth - 1) * 25}px` }}>
+            <a href={`#${heading.slug}`}>
+              <span>{heading.text}</span>
+            </a>
+          </span>
+        ))
+      }
     </div>
     <Content />
     <div class="flex items-center mt-12 space-x-6 not-prose">
@@ -67,6 +82,8 @@ const { Content } = await post.render()
     const headers = document.querySelectorAll('article > :is(h1, h2, h3, h4, h5, h6)')
 
     headers.forEach(function (header) {
+      if (header.id == 'title') return
+
       header.classList.add('scroll-mt-12', 'cursor-pointer')
       header.addEventListener('click', function () {
         window.location.hash = header.id
@@ -74,5 +91,5 @@ const { Content } = await post.render()
     })
   }
 
-  document.addEventListener('astro:load', onPageLoad, { once: true })
+  document.addEventListener('astro:page-load', onPageLoad, { once: true })
 </script>
