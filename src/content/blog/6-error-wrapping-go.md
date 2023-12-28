@@ -386,19 +386,19 @@ import "errors"
 func stackTrace(err error) []error {
 	result := make([]error, 0)
 
-    // Unwrap joined errors and ignore the join itself.
+	// Unwrap joined errors and ignore the join itself.
 	if e, ok := err.(interface {
 		Unwrap() []error
 	}); ok {
 		for _, err := range e.Unwrap() {
-			result = append(result, stacktrace(err)...)
+			result = append(result, stackTrace(err)...)
 		}
 
 		return result
 	}
 
-    // We can ignore the wrapped error, as it's contained
-    // in the fmt.Errorf string.
+	// We can ignore the wrapped error, as it's contained
+	// in the fmt.Errorf string.
 	return append(result, err)
 }
 ```
