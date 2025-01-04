@@ -2,7 +2,7 @@
 import Footer from '../components/Footer.astro'
 import favicon from '../assets/favicon.ico'
 import og from '../assets/og.png?url'
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 
 interface Props {
   title?: string
@@ -19,7 +19,7 @@ const finalDescription = description
   : "Inspiring engineers to build the future. I'm Èrik, a systems engineer from Catalonia that builds open source software and occasionally writes about it."
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -48,7 +48,7 @@ const finalDescription = description
     <title>
       {finalTitle}
     </title>
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body
     class="text-black bg-neutral-50 dark:bg-neutral-950 dark:text-white print:bg-white selection:bg-neutral-700/20 selection:dark:bg-neutral-300/20"
