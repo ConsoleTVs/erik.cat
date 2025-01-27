@@ -3,9 +3,7 @@ title: "Lambda Query Documentation"
 description: "This post is used as documentation for `@studiolambda/query`. Lambda Query is a library
 created to manage asynchronous data on your code. This is generally used when you
 have to fetch data asynchronously for a given resource. Lambda Query allows you to
-manage this data by using an internal cache. It is very similar to how vercel's `swr`
-work. Lambda Query is also built to support arbitrary cache and event system,
-making it possible to create your own implementations."
+manage this data by using an internal cache."
 pubDate: "Jan 04 2025"
 ---
 
@@ -43,7 +41,9 @@ const instance = createQuery()
 const result = await instance.query('/posts')
 ```
 
-## Configuration Options
+## Configuration
+
+### Available options
 
 The configuration options available are the following:
 
@@ -55,7 +55,7 @@ The configuration options available are the following:
 | **removeOnError** | `Boolean`  | `false` | A `boolean` indicating if the stored cached item should be removed upon a refetching causes an error. The fetching resolver is always removed.                                                                                                                                     |
 | **fresh**         | `Boolean`  | `false` | A `boolean` indicating if a query result should always be a fresh fetched instance regardless of any cached value or its expiration time.                                                                                                                                          |
 
-### Additional Instance Configuration
+#### Additional instance configuration
 
 Additionally, the instance itself also accepts the specific configurations found below:
 
@@ -66,9 +66,9 @@ Additionally, the instance itself also accepts the specific configurations found
 | **events**         | `EventTarget`      | `new EventTarget()`             | A `EventTarget` indicating the event system to use.                                                                                                                                                                                                       |
 | **broadcast**      | `BroadcastChannel` | `new BroadcastChannel('query')` | A `BroadcastChannel` indicating the broadcast channel to use. If not provided, the broadcast feature won't be used as it would require cleanup. If you're using lambda query via a specific library such as React, this is handled automatically for you. |
 
-## Lazy Configuration or Re-Configuration
+### Lazy configuration
 
-You can re-configure an Lambda Query instance by calling the `configure` function provided
+You can reconfigure an Lambda Query instance by calling the `configure` function provided
 by the instance and passing it the exact same options as the original constructor, however,
 the options will be merged with the current instance options rather than replaced, therefore
 there's no need to pass in the whole configuration, you can just give it the options you wish
@@ -78,7 +78,9 @@ to replace.
 instance.configure(options)
 ```
 
-## Query Asynchronous Data
+## Data fetching
+
+### Query asynchronous data
 
 You can use the `query` function provided by the instance to start querying for async data. This method takes in a cache key that will be passed to the fetcher and some specific options that will replace the instance options for that specific call.
 
@@ -107,47 +109,23 @@ const result2 = await instance.query('my-posts', {
 })
 ```
 
-## Subscribe to changes
+### Aborting pending operations
 
-You can subscribe to different events happening on Lambda Query by using the `subscribe`
-function in an instance. The return value of a subscribe is an unsubscriber that can be
-called to terminate the subscription.
-
-```ts
-const unsubscribe = instance.subscribe('event-name', function (event: Event) {
-  // ...
-})
-
-// When the subscription is no longer needed...
-unsubscribe()
-```
-
-The following are the available events that you can subscribe to, and each have a diferent payload available.
-
-| Event          | Description                                                                                                                                                                                                                                                                                                                                    | Event Detail                                   |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| **refetching** | Fired when a value is refetched.                                                                                                                                                                                                                                                                                                               | Promise that will resolve to the fetched data. |
-| **resolved**   | Fired when a value is resolved, this means it was successfully fetched or refetched.                                                                                                                                                                                                                                                           | The resolved item.                             |
-| **mutating**   | Fired when a value is currently being mutated.                                                                                                                                                                                                                                                                                                 | Promise that will resolve to the mutated item. |
-| **mutated**    | Fired when a value has been manually mutated. The `event` detail is the mutated item.                                                                                                                                                                                                                                                          | A                                              |
-| **aborted**    | Fired when a value has been manually aborted either by calling `abort` or by calling `forget` when a resolver is pending. The `event` detail is the promise's result, usually if the abort signal has been used this means it's either what it returns when it's aborted or in case of throw, what the `.catch` returns (the throwing reason). | A                                              |
-| **forgotten**  | Fired when a value has been forgotten from the cache, probably because of a call to `forget`. The `event` detail is the item that has been forgotten from the cache.                                                                                                                                                                           | A                                              |
-| **hydrated**   | Fired when a value has been hydrated directly to the cache due to a call to `hydrate`. The `event` detail is the item that has been hydrated to the cache.                                                                                                                                                                                     | A                                              |
-| **error**      | Fired when a refetching has failed, this means the promise of the fetcher has been rejected. The `event` detail is the error returned by it.                                                                                                                                                                                                   | A                                              |
-
-## Subscribe to broadcast channel
-
-You can also call the `subscribeBroadcast` function to make Lambda Query
-reproduce the channel events to the current event system.
-This function returns the unsubscriber that can be called to stop the subscription.
+You can abort any pending async operations by using the `abort` function on an instance.
+This will cause all pending fetchers to be aborted using the internal [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController), and therefore, the signal passed to the fetcher will be used. Make sure to be using that signal to gracefully
+teardown your async operations. After the functions have been aborted, their resolvers will be removed from the cache, therefore never resolving to its value. This function does not return anything.
 
 ```ts
-const unsubscribe = instance.subscribeBroadcast()
-// ...
-unsubscribe()
+// Abort without any reason.
+instance.abort('/posts')
+
+// Abort with a specific reason.
+instance.abort('/posts', reason)
 ```
 
-## Optimistic Mutations
+## Cache
+
+### Cache mutations
 
 You can perform optimistic mutations of the items in the cache by using the `mutate` function on an instance.
 The mutation function also accepts options.
@@ -180,37 +158,23 @@ await instance.mutate('/posts', async function (previous) {
 })
 ```
 
-## Aborting pending operations
-
-You can abort any pending async operations by using the `abort` function on an instance.
-This will cause all pending fetchers to be aborted using the internal [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController), and therefore, the signal passed to the fetcher will be used. Make sure to be using that signal to gracefully
-teardown your async operations. After the functions have been aborted, their resolvers will be removed from the cache, therefore never resolving to its value. This function does not return anything.
-
-```ts
-// Abort without any reason.
-instance.abort('/posts')
-
-// Abort with a specific reason.
-instance.abort('/posts', reason)
-```
-
-## Invalidate or Forget Cached Items
+### Invalidate or forget cached items
 
 You can invalidate or forget certain cache items by key using the `forget` function provided on an instance.
-This function does not return anything.
+This function does return a promise to ensure events have been emitted.
 
 ```ts
 // Forget a single key.
-instance.forget('/user')
+await instance.forget('/user')
 
 // Forget multiple keys.
-instance.forget(['/user', '/posts'])
+await instance.forget(['/user', '/posts'])
 
 // Forget multiple keys using regex.
-instance.forget(/^user(.*)/g)
+await instance.forget(/^user(.*)/g)
 ```
 
-## Hydrate data to the cache
+### Hydrate data to the cache
 
 In order to hydrate certain data to the cache the `hydrate` function can be used.
 This function does not return anything.
@@ -231,7 +195,7 @@ instance.hydrate('/user', user, {
 instance.hydrate(['/post/1', '/post/2'], defaultPost)
 ```
 
-## Inspect current cached keys.
+### Inspect current cached keys
 
 You can inspect the current cached keys of both, the `resolvers` cache and the `items` cache by using the `keys` function on an instance. This will return an [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) with the given keys.
 
@@ -243,7 +207,7 @@ const resolverKeys = instance.keys('resolvers')
 const itemKeys = instance.keys('items')
 ```
 
-## Check expiration date of items
+### Check expiration date of items
 
 You can check the expiration date for the given keys by using the `expiration` function.
 The return value is undefined if that key is not in the items cache, otherwise, a [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) object is returned.
@@ -252,7 +216,7 @@ The return value is undefined if that key is not in the items cache, otherwise, 
 const expirationDate = expiration('/user')
 ```
 
-## Get current data from the cache
+### Get a snapshot of the data
 
 You can use the `snapshot` function to get the current data
 of the items cache, this will return undefined if not found in the
@@ -262,16 +226,98 @@ items cache (eg. still resolving).
 const user = instance.snapshot('/user')
 ```
 
+## Events
+
+The following are the events that are supported in Lambda Query:
+
+| Event          | Description                                                                                                               | Event Detail                                                                                                                                                                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **refetching** | Fired when a value is refetched.                                                                                          | Promise that will resolve to the fetched data.                                                                                                                                                 |
+| **resolved**   | Fired when a value is resolved, this means it was successfully fetched or refetched.                                      | The resolved item.                                                                                                                                                                             |
+| **mutating**   | Fired when a value is currently being mutated.                                                                            | Promise that will resolve to the mutated item.                                                                                                                                                 |
+| **mutated**    | Fired when a value has been manually mutated.                                                                             | The mutated item.                                                                                                                                                                              |
+| **aborted**    | Fired when a value has been manually aborted either by calling `abort` or by calling `forget` when a resolver is pending. | The promise's result, usually if the abort signal has been used this means it's either what it returns when it's aborted or in case of throw, what the `.catch` returns (the throwing reason). |
+| **forgotten**  | Fired when a value has been forgotten from the cache, probably because of a call to `forget`.                             | The item that has been forgotten from the cache.                                                                                                                                               |
+| **hydrated**   | Fired when a value has been hydrated directly to the cache due to a call to `hydrate`.                                    | The hydrated item into the cache.                                                                                                                                                              |
+| **error**      | Fired when a refetching has failed, this means the promise of the fetcher has been rejected.                              | The error that has been thrown.                                                                                                                                                                |
+
+### Emitting events
+
+You can manually emit events to Lambda Query. **Keep in mind this is a low level API**
+that should only be used for advanced users. This is because the payloads of events
+must be followed or undefined behaviour is expected. The Lambda Query API's already use
+this emit function internally to emit events, so you should not need to call this
+unless doing some specific testing.
+
+```ts
+instance.emit('/some/key', 'mutate', 'value')
+```
+
+### Subscribing to events
+
+You can subscribe to different events happening on Lambda Query by using the `subscribe`
+function in an instance. The return value of a subscribe is an unsubscriber that can be
+called to terminate the subscription.
+
+```ts
+const unsubscribe = instance.subscribe('event-name', function (event: Event) {
+  // ...
+})
+
+// When the subscription is no longer needed...
+unsubscribe()
+```
+
+### Once events
+
+You can listen to the first event emitted once in a given key as a Promise.
+This is every usefull for testing, where you're expecting certain event to be
+fired.
+
+```ts
+const event = await instance.once('/some/key', 'refetching')
+
+// Since this is a refetching event, the event detail is a promise
+// that will resolve when the data finishes loading.
+await event.detail
+```
+
+### Streaming events
+
+When interested in periodically listening to events, you canuse the event streaming
+functionality to iterate over an `AsyncGenerator` for each successive event
+that comes into the given key and event name.
+
+```ts
+const events = instance.stream('/some/key', 'resolved')
+
+for await (const event of events) {
+  console.log('resolved', event.detail)
+}
+```
+
+### Subscribe to broadcast channel
+
+You can also call the `subscribeBroadcast` function to make Lambda Query
+reproduce the channel events to the current event system.
+This function returns the unsubscriber that can be called to stop the subscription.
+
+```ts
+const unsubscribe = instance.subscribeBroadcast()
+// ...
+unsubscribe()
+```
+
 ## Additional getters
 
 You can additionally call the following getters to access specific instances of
 Lambda Query:
 
-| Event       | Description                                                  |
-| ----------- | ------------------------------------------------------------ |
-| **caches**  | Access the current caches.                                   |
-| **events**  | Access the current event system.                             |
-| **channel** | Access the current broadcast channel (undefined it not set). |
+| Event         | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| **caches**    | Access the current caches.                                   |
+| **events**    | Access the current event system.                             |
+| **broadcast** | Access the current broadcast channel (undefined it not set). |
 
 # React
 
@@ -283,7 +329,7 @@ logic around it (Suspense, Transitions, ...).
 This implementation has been designed to work first-class with React's Suspense
 and Transitions model, and therefore, it requires React 19.
 
-## Getting Started
+## Getting started
 
 To get started using the React integration, simply wrap your application
 with the `QueryProvider` Component.
@@ -347,9 +393,19 @@ In order to use Lambda Query, you first need to provide
 an instance to your React application. This can be done using
 the `QueryProvider` component. This component already takes care
 of all the logic around subscribing to a broadcast channel and providing
-the query instance using a context, alongside all its options.
+the query instance using a context.
 
-You can provide any configuration of Lambda Query instance as props to the provider.
+By default, the query provider will create a new query instance for you, but
+in most cases you'll want to override it with a custom one. The following properties
+are accepted in the provided:
+
+| Property                    | Type      | Default     | Description                                                                                                                           |
+| --------------------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **query**                   | `Query`   | `undefined` | Overrides the Lambda Query instance to use.                                                                                           |
+| **clearOnForget**           | `Boolean` | `false`     | Clears the data upon forgetting, meaning a new query will be triggered when the data is forgotten. Otherwise, stale data will remain. |
+| **ignoreTransitionContext** | `Boolean` | `false`     | Tells the hook to ignore the transition context and always create a transition.                                                       |
+
+#### Creating a default instance
 
 ```tsx
 import { QueryProvider } from '@studiolambda/query/react'
@@ -357,6 +413,23 @@ import { QueryProvider } from '@studiolambda/query/react'
 export function App() {
   return (
     <QueryProvider>
+      <MyApp />
+    </QueryProvider>
+  )
+}
+```
+
+#### Providing a query instance
+
+```tsx
+import type { QueryProvider } from '@studiolambda/query/react'
+import { useMemo } from 'react'
+
+export function App() {
+  const query = useMemo(() => createQuery(), [])
+
+  return (
+    <QueryProvider query={query}>
       <MyApp />
     </QueryProvider>
   )
@@ -411,13 +484,7 @@ function App() {
 ```
 
 The options that are accepted as the second parameter are the same of the Lambda Query.
-Additionally, both the context and the hook accept the following properties:
-
-| Property                    | Type      | Default     | Description                                                                                                                           |
-| --------------------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **query**                   | `Query`   | `undefined` | Overrides the Lambda Query instance to use.                                                                                           |
-| **clearOnForget**           | `Boolean` | `false`     | Clears the data upon forgetting, meaning a new query will be triggered when the data is forgotten. Otherwise, stale data will remain. |
-| **ignoreTransitionContext** | `Boolean` | `false`     | Tells the hook to ignore the transition context and always create a transition.                                                       |
+Additionally, it also accepts the same options as the context provided by `<QueryProvider />`.
 
 The return value is an object that contains the following properties:
 
@@ -528,3 +595,62 @@ actual Lambda Query Context.
 
 The `useQueryTransition` hook is a shortcut on top of `use()` where a context is passed that is the
 actual Lambda Query Transition Context.
+
+## Testing
+
+The React integration has been designed with testing in mind, making it completly
+posible to correctly assert components or hooks that make use of it.
+
+The examples below use [Vitest](https://vitest.dev/) with React's `act` to assert a query.
+
+### Replacing fetcher
+
+```tsx
+import { it } from 'vitest'
+import { Suspense, act } from 'react'
+import { useQuery } from '@studiolambda/query/react'
+import { createQuery } from '@studiolambda/query'
+import { createRoot } from 'react-dom/client'
+
+it('can query data', async ({ expect }) => {
+  interface User {
+    email: string
+  }
+
+  function Component() {
+    const { data } = useQuery('/user')
+
+    return <div>{data.email}</div>
+  }
+
+  function fetcher() {
+    return Promise.resolve('works')
+  }
+
+  const query = createQuery({ fetcher })
+  const options = { query }
+
+  function Component() {
+    const { data } = useQuery<string>('/user', options)
+
+    return data
+  }
+
+  const container = document.createElement('div')
+  const promise = query.once('/user', 'refetching')
+
+  await act(async function () {
+    createRoot(container).render(
+      <Suspense fallback="loading">
+        <Component />
+      </Suspense>
+    )
+  })
+
+  await act(async function () {
+    await promise
+  })
+
+  expect(container.innerText).toBe('works')
+})
+```
