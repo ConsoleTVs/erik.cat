@@ -1,5 +1,5 @@
 ---
-title: "Deep dive into Laravel's Service Container"
+title: "Deep dive into Laravel's service container"
 description: "On its core, a Laravel application is a service container. Laravel does make heavy
 use of those services during the execution of a request. In this article
 we'll explore what a service container is, and how dependency injection works."

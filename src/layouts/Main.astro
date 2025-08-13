@@ -1,8 +1,9 @@
 ---
-import Footer from '../components/Footer.astro'
+import '../tailwind.css'
 import favicon from '../assets/favicon.ico'
 import og from '../assets/og.png?url'
 import { ClientRouter } from 'astro:transitions'
+import { Font } from 'astro:assets'
 
 interface Props {
   title?: string
@@ -13,10 +14,12 @@ const ogUrl = new URL(og, Astro.site)
 const { title, description } = Astro.props
 const path = Astro.url.pathname
 const segments = path.split('/')
-const finalTitle = title ? `${title} • Èrik C. Forés` : 'Èrik C. Forés • Software Engineer'
+const finalTitle = title
+  ? `${title} • Èrik C. Forés`
+  : 'Èrik C. Forés • Senior Cloud Technical Lead'
 const finalDescription = description
   ? description
-  : "Inspiring engineers to build the future. I'm Èrik, a systems engineer from Catalonia that builds open source software and occasionally writes about it."
+  : "Inspiring engineers to build the future. I'm Èrik, a senior cloud technical lead from Catalonia that builds open source software and occasionally writes about it."
 ---
 
 <!doctype html>
@@ -41,6 +44,8 @@ const finalDescription = description
 
     <meta name="description" content={finalDescription} />
     <link rel="icon" href={favicon} />
+    <Font cssVariable="--font-primary" preload />
+    <Font cssVariable="--font-secondary" preload />
     <link
       href="https://api.fontshare.com/v2/css?f[]=gambarino@400&f[]=supreme@501,400,401,300,301,500,701,700&display=swap"
       rel="stylesheet"
@@ -51,37 +56,53 @@ const finalDescription = description
     <ClientRouter />
   </head>
   <body
-    class="text-black bg-neutral-50 dark:bg-neutral-950 dark:text-white print:bg-white selection:bg-neutral-700/20 selection:dark:bg-neutral-300/20"
+    class="backface-hidden text-black bg-neutral-50 dark:bg-neutral-950 dark:text-white print:bg-white selection:bg-neutral-700/20 selection:dark:bg-neutral-300/20"
     style="backface-visibility: hidden">
-    <div class="flex flex-col">
-      <header
-        class="container flex items-center justify-center h-32 space-x-3 print:hidden text-neutral-500">
+    <div class="flex flex-col min-h-screen">
+      <header class="container flex items-center h-32 gap-4 xl:gap-6 lg:text-lg overflow-x-auto">
+        <!-- <Logo class="w-12 h-12 text-white" /> -->
         <a
           href="/"
-          class={path === '/'
-            ? 'text-black dark:text-white underline underline-offset-8 decoration-2'
-            : ''}>
+          class="font-mono hidden lg:block text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text font-bold select-none">
+          erik.cat
+        </a>
+        <a
+          href="/"
+          class={path === '/' ? 'opacity-100' : 'opacity-50 hover:opacity-100 transition-opacity'}>
           Home
         </a>
-        <span>&bullet;</span>
         <a
           href="/blog"
           class={segments[1] === 'blog'
-            ? 'text-black dark:text-white underline underline-offset-8 decoration-2'
-            : ''}>
+            ? 'opacity-100'
+            : 'opacity-50 hover:opacity-100 transition-opacity'}>
           Blog
         </a>
-        <span>&bullet;</span>
-        <a href="https://github.com/ConsoleTVs" target="_blank">Github</a>
-        <span>&bullet;</span>
-        <a href="https://twitter.com/ErikCampobadal" target="_blank">Twitter</a>
-        <span>&bullet;</span>
-        <a href="https://www.linkedin.com/in/erik-c-fores/" target="_blank">Linkedin</a>
+        <a
+          class="opacity-50 hover:opacity-100 transition-opacity"
+          href="https://github.com/ConsoleTVs"
+          target="_blank">Github</a
+        >
+        <a
+          class="opacity-50 hover:opacity-100 transition-opacity"
+          href="https://twitter.com/ErikCampobadal"
+          target="_blank">Twitter</a
+        >
+        <a
+          class="opacity-50 hover:opacity-100 transition-opacity"
+          href="https://www.linkedin.com/in/erik-c-fores/"
+          target="_blank">Linkedin</a
+        >
       </header>
-      <main class="container flex-grow">
+      <main class="container flex-grow flex flex-col">
         <slot />
       </main>
-      <Footer />
+      <footer
+        class="container flex flex-col my-12 space-y-2 text-neutral-300 dark:text-neutral-700">
+        <span>
+          Copyright &copy; {new Date().getFullYear().toString()} &bullet; Èrik C. Forés. All rights reserved.
+        </span>
+      </footer>
     </div>
   </body>
 </html>

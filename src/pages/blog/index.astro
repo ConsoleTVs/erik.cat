@@ -11,23 +11,24 @@ const posts = (await getCollection('blog')).sort(
 <Main
   title="Blog"
   description="A little bit of everything. A personal blog about compute science, technology and specially programming.">
-  <h1
-    class="mb-12 font-serif text-5xl font-extrabold leading-tight text-center text-black lg:leading-tight sm:leading-tight md:leading-tight sm:text-6xl md:text-7xl lg:text-8xl dark:text-white">
-    <span>A little bit of everything</span>
-  </h1>
-  <div class="mb-3 italic text-neutral-500">
-    Total of {posts.length} posts, ordered by date ↓
-  </div>
-  <ul class="space-y-8">
+  <h1 class="text-4xl xl:text-5xl mb-2">Signal Over Noise</h1>
+  <h2 class="mb-12 text-lg text-neutral-400 dark:text-neutral-600">
+    Sharp takes on what matters in software — and silence on what doesn’t.
+  </h2>
+  <ul class="grid grid-cols-1 gap-12">
     {
       posts.map((post) => (
-        <li>
+        <li class="hover:bg-neutral-200 dark:hover:bg-neutral-900 transition-colors rounded-xs -m-4 p-4 w-full xl:w-2/3">
           <a href={`/blog/${post.slug.replace(/^[0-9]+-/, '')}/`}>
-            <h1 class="font-serif text-3xl text-black dark:text-white">{post.data.title}</h1>
-            <div class="mb-4 text-neutral-500">
-              Published on <FormattedDate date={post.data.pubDate} />
+            <h1 class="text-lg xl:text-xl text-black dark:text-white line-clamp-1">
+              {post.data.title}
+            </h1>
+            <div class="mb-6 text-neutral-400 dark:text-neutral-600">
+              <FormattedDate date={post.data.pubDate} />
             </div>
-            <div class="italic text-neutral-500">{post.data.description}</div>
+            <div class="text-neutral-400 dark:text-neutral-600 line-clamp-3 text-justify">
+              {post.data.description}
+            </div>
           </a>
         </li>
       ))

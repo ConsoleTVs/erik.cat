@@ -1,5 +1,5 @@
 ---
-title: 'Error Wrapping in Go: A Guide to Enhance Debugging'
+title: 'Dealing with error wrapping in Go'
 description: "In this article, we'll take a closer look at how we can use the power of go errors to enhance our day to day debugging and make sense of error values. We'll also take a look at how errors are wrapped and unwrapped. Learn how to build meaningful stack traces and boost your debugging abilities."
 pubDate: 'Dec 27 2023'
 ---

@@ -4,15 +4,12 @@ export interface Props {
 }
 
 const { date } = Astro.props
+const formatted = date.toLocaleDateString('en-UK', {
+  dateStyle: 'full',
+  timeZone: 'Europe/Madrid',
+})
 ---
 
-<time
-  datetime={date.toISOString()}
-  class="font-medium text-transparent bg-gradient-to-r from-rose-500 to-violet-500 bg-clip-text">
-  {
-    date.toLocaleDateString('en-US', {
-      dateStyle: 'full',
-      timeZone: 'Europe/Madrid',
-    })
-  }
+<time datetime={date.toISOString()}>
+  {formatted}
 </time>

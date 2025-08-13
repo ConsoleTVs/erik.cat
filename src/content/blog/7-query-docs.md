@@ -7,7 +7,7 @@ manage this data by using an internal cache."
 pubDate: "Jan 04 2025"
 ---
 
-To know more about the project, please checkout the [Github repository](https://github.com/StudioLambda/Query). You might find some valuable information there that is not covered in this documentation. If you have any questions, feel free to open an issue on the repository.
+> To know more about the project, please checkout the [Github repository](https://github.com/StudioLambda/Query). You might find some valuable information there that is not covered in this documentation. If you have any questions, feel free to open an issue on the repository.
 
 # Installation
 
@@ -43,8 +43,6 @@ const result = await instance.query('/posts')
 
 ## Configuration
 
-### Available options
-
 The configuration options available are the following:
 
 | Property          | Type       | Default | Description                                                                                                                                                                                                                                                                        |
@@ -55,7 +53,7 @@ The configuration options available are the following:
 | **removeOnError** | `Boolean`  | `false` | A `boolean` indicating if the stored cached item should be removed upon a refetching causes an error. The fetching resolver is always removed.                                                                                                                                     |
 | **fresh**         | `Boolean`  | `false` | A `boolean` indicating if a query result should always be a fresh fetched instance regardless of any cached value or its expiration time.                                                                                                                                          |
 
-#### Additional instance configuration
+### Additional instance configuration
 
 Additionally, the instance itself also accepts the specific configurations found below:
 
@@ -124,6 +122,9 @@ instance.abort('/posts', reason)
 ```
 
 ## Cache
+
+You can directly manipulate the cache by performing
+different actions suchs as mutating, invalidating or hydrating. Additionally you can inspect the data.
 
 ### Cache mutations
 
@@ -272,7 +273,7 @@ unsubscribe()
 
 You can listen to the first event emitted once in a given key as a Promise.
 This is every usefull for testing, where you're expecting certain event to be
-fired.
+fired. Prefer `next` over `once` if you are only interested in the fetching.
 
 ```ts
 const event = await instance.once('/some/key', 'refetching')
@@ -282,17 +283,47 @@ const event = await instance.once('/some/key', 'refetching')
 await event.detail
 ```
 
-### Streaming events
+### Sequence events
 
-When interested in periodically listening to events, you canuse the event streaming
+When interested in periodically listening to events, you canuse the event sequences
 functionality to iterate over an `AsyncGenerator` for each successive event
 that comes into the given key and event name.
 
 ```ts
-const events = instance.stream('/some/key', 'resolved')
+const events = instance.sequence('/some/key', 'resolved')
 
 for await (const event of events) {
   console.log('resolved', event.detail)
+}
+```
+
+### Next Fetchings
+
+When dealing with specific refetching events, you can use a shortuct
+to quickly get the next values of the keys that are fetched. You can also await for multiple keys at once. This is the prefered way to do testing.
+
+```ts
+const result = await instance.next('/some/key')
+const [first, second] = await instance.next(['/first', '/second'])
+```
+
+### Stream Fetchings
+
+You can also use the streaming generator function to get
+the next fetchings as they come in. Streaming can also stream
+over an array of keys, that will await them all.
+
+```ts
+const fetchings = instance.stream('/some/key')
+
+for await (const value of fetchings) {
+  console.log('resolved', value)
+}
+
+const multiple = instance.stream(['/first', '/second'])
+
+for await (const [first, second] of multiple) {
+  console.log('resolved', first, second)
 }
 ```
 
@@ -460,6 +491,40 @@ export function App() {
 }
 ```
 
+### QueryPrefetch
+
+You can use the `QueryPrefetch` component to prefetch specific keys. Indirectly, it is
+simply a wrapper around `useQueryPrefetch` hook. The keys passed are stabalized to avoid re-renders and ease the API. That means you can direcly pass an array of keys without memo techniques.
+
+```ts
+import { QueryPrefetch } from '@studiolambda/query/react'
+
+export function App() {
+  return (
+    <QueryPrefetch keys={['/first', '/second']}>
+      <MyApp />
+    </QueryPrefetch>
+  )
+}
+```
+
+### QueryPrefetchTags
+
+Similar to `QueryPrefetch` but additionally adds the `<link rel="preload" as="fetch" />` tags
+to HTML. The keys passed are stabalized to avoid re-renders and ease the API. That means you can direcly pass an array of keys without memo techniques.
+
+```ts
+import { QueryPrefetchTags } from '@studiolambda/query/react'
+
+export function App() {
+  return (
+    <QueryPrefetchTags keys={['/first', '/second']}>
+      <MyApp />
+    </QueryPrefetchTags>
+  )
+}
+```
+
 ## Hooks
 
 The available react hooks allow for quick and easy access to most Lambda Query
@@ -591,10 +656,30 @@ in the options or the one in the context (options has preference).
 The `useQueryContext` hook is a shortcut on top of `use()` where a context is passed that is the
 actual Lambda Query Context.
 
-### useQueryTransition
+### useQueryTransitionContext
 
-The `useQueryTransition` hook is a shortcut on top of `use()` where a context is passed that is the
+The `useQueryTransitionContext` hook is a shortcut on top of `use()` where a context is passed that is the
 actual Lambda Query Transition Context.
+
+### useQueryPrefetch
+
+The `useQueryPrefetch` hook is used to programatically prefetch specific keys. You can also use the `QueryPrefetch` component. The keys passed are stabalized to avoid re-renders and ease the API. That means you can direcly pass an array of keys without memo techniques.
+
+The options that are accepted as the second parameter are:
+
+| Property  | Type    | Default     | Description                                 |
+| --------- | ------- | ----------- | ------------------------------------------- |
+| **query** | `Query` | `undefined` | Overrides the Lambda Query instance to use. |
+
+```tsx
+import { useQueryPrefetch } from '@studiolambda/query/react'
+
+function App() {
+  useQueryPrefetch(['/first', '/second'])
+
+  return <Content />
+}
+```
 
 ## Testing
 
@@ -613,16 +698,6 @@ import { createQuery } from '@studiolambda/query'
 import { createRoot } from 'react-dom/client'
 
 it('can query data', async ({ expect }) => {
-  interface User {
-    email: string
-  }
-
-  function Component() {
-    const { data } = useQuery('/user')
-
-    return <div>{data.email}</div>
-  }
-
   function fetcher() {
     return Promise.resolve('works')
   }
@@ -637,7 +712,7 @@ it('can query data', async ({ expect }) => {
   }
 
   const container = document.createElement('div')
-  const promise = query.once('/user', 'refetching')
+  const result = query.next('/user')
 
   await act(async function () {
     createRoot(container).render(
@@ -648,7 +723,9 @@ it('can query data', async ({ expect }) => {
   })
 
   await act(async function () {
-    await promise
+    const value = await result
+
+    expect(value).toBe('works')
   })
 
   expect(container.innerText).toBe('works')
