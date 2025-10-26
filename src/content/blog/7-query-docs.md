@@ -494,14 +494,17 @@ export function App() {
 ### QueryPrefetch
 
 You can use the `QueryPrefetch` component to prefetch specific keys. Indirectly, it is
-simply a wrapper around `useQueryPrefetch` hook. The keys passed are stabalized to avoid re-renders and ease the API. That means you can direcly pass an array of keys without memo techniques.
+simply a wrapper around `useQueryPrefetch` hook.
 
 ```ts
 import { QueryPrefetch } from '@studiolambda/query/react'
+import { useMemo } from 'react'
 
 export function App() {
+  const keys = useMemo(() => ['/first', '/second'])
+
   return (
-    <QueryPrefetch keys={['/first', '/second']}>
+    <QueryPrefetch keys={keys}>
       <MyApp />
     </QueryPrefetch>
   )
@@ -511,14 +514,17 @@ export function App() {
 ### QueryPrefetchTags
 
 Similar to `QueryPrefetch` but additionally adds the `<link rel="preload" as="fetch" />` tags
-to HTML. The keys passed are stabalized to avoid re-renders and ease the API. That means you can direcly pass an array of keys without memo techniques.
+to HTML.
 
 ```ts
 import { QueryPrefetchTags } from '@studiolambda/query/react'
+import { useMemo } from 'react'
 
 export function App() {
+  const keys = useMemo(() => ['/first', '/second'])
+
   return (
-    <QueryPrefetchTags keys={['/first', '/second']}>
+    <QueryPrefetchTags keys={keys}>
       <MyApp />
     </QueryPrefetchTags>
   )
@@ -663,7 +669,7 @@ actual Lambda Query Transition Context.
 
 ### useQueryPrefetch
 
-The `useQueryPrefetch` hook is used to programatically prefetch specific keys. You can also use the `QueryPrefetch` component. The keys passed are stabalized to avoid re-renders and ease the API. That means you can direcly pass an array of keys without memo techniques.
+The `useQueryPrefetch` hook is used to programatically prefetch specific keys. You can also use the `QueryPrefetch` component.
 
 The options that are accepted as the second parameter are:
 
@@ -673,9 +679,12 @@ The options that are accepted as the second parameter are:
 
 ```tsx
 import { useQueryPrefetch } from '@studiolambda/query/react'
+import { useMemo } from 'react'
 
 function App() {
-  useQueryPrefetch(['/first', '/second'])
+  const keys = useMemo(() => ['/first', '/second'])
+
+  useQueryPrefetch(keys)
 
   return <Content />
 }
