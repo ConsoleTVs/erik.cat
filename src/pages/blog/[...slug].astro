@@ -1,14 +1,14 @@
 ---
 import type { CollectionEntry } from 'astro:content'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import Main from '../../layouts/Main.astro'
 import FormattedDate from '../../components/FormattedDate.astro'
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog')
+  const blog = await getCollection('blog')
 
-  return posts.map((post) => ({
-    params: { slug: post.slug.replace(/^[0-9]+-/, '') },
+  return blog.map((post) => ({
+    params: { slug: post.id.replace(/^[0-9]+-/, '') },
     props: post,
   }))
 }
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'blog'>
 
 const post = Astro.props
-const { Content, headings } = await post.render()
+const { Content, headings } = await render(post)
 ---
 
 <Main title={post.data.title} description={post.data.description}>

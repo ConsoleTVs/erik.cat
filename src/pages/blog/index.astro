@@ -3,9 +3,10 @@ import FormattedDate from '../../components/FormattedDate.astro'
 import Main from '../../layouts/Main.astro'
 import { getCollection } from 'astro:content'
 
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-)
+const blog = await getCollection('blog')
+const posts = blog.sort(function (a, b) {
+  return b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+})
 ---
 
 <Main
@@ -19,7 +20,7 @@ const posts = (await getCollection('blog')).sort(
     {
       posts.map((post) => (
         <li class="hover:bg-neutral-200 dark:hover:bg-neutral-900 transition-colors rounded-xs -m-4 p-4 w-full xl:w-2/3">
-          <a href={`/blog/${post.slug.replace(/^[0-9]+-/, '')}/`}>
+          <a href={`/blog/${post.id.replace(/^[0-9]+-/, '')}/`}>
             <h1 class="text-lg xl:text-xl text-black dark:text-white line-clamp-1">
               {post.data.title}
             </h1>
